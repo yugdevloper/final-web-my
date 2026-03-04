@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin';
+    }
+    
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Test Series collection (hierarchical structure)
+    match /testSeries/{seriesId} {
+      // Read: Users can read active test series, Admins can read all
+      allow read: if isAuthenticated() && 
+                     (resource.data.status == 'active' || isAdmin());
+      
+      // Write: Only admins
+      allow create, update, delete: if isAdmin();
+      
+      // Sections subcollection
+      match /sections/{sectionId} {
+        allow read: if isAuthenticated();
+        allow create, update, delete: if isAdmin();
+        
+        // Tests subcollection
+        match /tests/{testId} {
+          // Read: Users can read active tests, Admins can read all
+          allow read: if isAuthenticated() && 
+                         (resource.data.status == 'active' || isAdmin());
+          allow create, update, delete: if isAdmin();
+          
+          // Questions subcollection
+          match /questions/{questionId} {
+            allow read: if isAuthenticated();
+            allow create, update, delete: if isAdmin();
+          }
+        }
+      }
+    }
+    
+    // Attempts collection
+    match /attempts/{attemptId} {
+      allow read: if isAuthenticated() && 
+                     (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated() && 
+                       isOwner(request.resource.data.userId);
+      allow update, delete: if isAdmin();
+    }
+    
+    // Results collection
+    match /results/{resultId} {
+      allow read: if isAuthenticated() && 
+                     (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+    
+    // Legacy collections (for backward compatibility)
+    match /exams/{examId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    match /sections/{sectionId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    match /questions/{questionId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UP Exam Mantra - Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4A90E2;
+            margin-top: 0;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #357ABD;
+        }
+        .link {
+            color: #4A90E2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .steps {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .steps li {
+            margin: 10px 0;
+        }
+        #testResult {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🚀 UP Exam Mantra - Server Status</h1>
+        
+        <div class="status success">
+            ✅ <strong>Server is Running!</strong><br>
+            The Vite dev server started successfully on port 3000
+        </div>
+
+        <div class="status info">
+            <strong>Server Details:</strong><br>
+            📍 URL: <a href="http://localhost:3000" target="_blank" class="link">http://localhost:3000</a><br>
+            ⚡ Vite Version: 5.4.21<br>
+            ⏱️ Ready in: 2797 ms<br>
+            📁 Location: frontend/
+        </div>
+
+        <h2>🔧 Troubleshooting Steps:</h2>
+        
+        <div class="steps">
+            <h3>If you see "Connection Refused":</h3>
+            <ol>
+                <li><strong>Wait 10 seconds</strong> - Server might still be initializing</li>
+                <li><strong>Clear browser cache</strong> - Press Ctrl+Shift+Delete</li>
+                <li><strong>Try different browser</strong> - Chrome, Firefox, or Edge</li>
+                <li><strong>Check firewall</strong> - Allow Node.js through Windows Firewall</li>
+                <li><strong>Try 127.0.0.1</strong> instead of localhost</li>
+            </ol>
+        </div>
+
+        <h2>🎯 Quick Actions:</h2>
+        
+        <button onclick="window.open('http://localhost:3000', '_blank')">
+            🌐 Open App (localhost:3000)
+        </button>
+        
+        <button onclick="window.open('http://127.0.0.1:3000', '_blank')">
+            🌐 Open App (127.0.0.1:3000)
+        </button>
+        
+        <button onclick="testConnection()">
+            🔍 Test Connection
+        </button>
+
+        <div id="testResult"></div>
+
+        <div class="status warning" style="margin-top: 30px;">
+            <strong>⚠️ Important - Firebase Setup Required:</strong><br>
+            Before you can use login/register features:<br>
+            1. Go to <a href="https://console.firebase.google.com/" target="_blank" class="link">Firebase Console</a><br>
+            2. Select project: <strong>mocktestwebsite-1047c</strong><br>
+            3. Enable <strong>Authentication → Email/Password</strong><br>
+            4. Create <strong>Firestore Database</strong> (production mode)
+        </div>
+
+        <h2>📚 What You Should See:</h2>
+        <div class="steps">
+            <ul>
+                <li>✅ Login page with blue header</li>
+                <li>✅ "UP Exam Mantra" title</li>
+                <li>✅ Email and Password fields</li>
+                <li>✅ Login button</li>
+                <li>✅ Links to Register and Forgot Password</li>
+            </ul>
+        </div>
+
+        <h2>🐛 Still Not Working?</h2>
+        <div class="steps">
+            <p><strong>Check Terminal Output:</strong></p>
+            <p>Look for any error messages in the terminal where the server is running.</p>
+            
+            <p><strong>Common Issues:</strong></p>
+            <ul>
+                <li><strong>Port in use:</strong> Another app is using port 3000</li>
+                <li><strong>Firewall:</strong> Windows Firewall blocking Node.js</li>
+                <li><strong>Antivirus:</strong> Security software blocking localhost</li>
+            </ul>
+
+            <p><strong>Alternative: Check if server is responding</strong></p>
+            <p>Open Command Prompt and run:</p>
+            <code style="background: #f0f0f0; padding: 10px; display: block; border-radius: 4px;">
+                curl http://localhost:3000
+            </code>
+        </div>
+
+        <div class="status info" style="margin-top: 30px;">
+            <strong>📖 Documentation:</strong><br>
+            • <a href="RUN_INSTRUCTIONS.md" class="link">RUN_INSTRUCTIONS.md</a> - Detailed run guide<br>
+            • <a href="QUICK_START.md" class="link">QUICK_START.md</a> - Quick setup<br>
+            • <a href="SETUP_INSTRUCTIONS.md" class="link">SETUP_INSTRUCTIONS.md</a> - Complete setup
+        </div>
+    </div>
+
+    <script>
+        function testConnection() {
+            const resultDiv = document.getElementById('testResult');
+            resultDiv.innerHTML = '<div class="status info">Testing connection...</div>';
+            
+            fetch('http://localhost:3000')
+                .then(response => {
+                    if (response.ok) {
+                        resultDiv.innerHTML = '<div class="status success">✅ Connection successful! Server is responding. Try opening the app now.</div>';
+                    } else {
+                        resultDiv.innerHTML = '<div class="status warning">⚠️ Server responded but with status: ' + response.status + '</div>';
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = '<div class="status warning">❌ Connection failed: ' + error.message + '<br><br><strong>Try these:</strong><br>1. Wait 10 more seconds and try again<br>2. Check if firewall is blocking<br>3. Try opening http://127.0.0.1:3000 instead</div>';
+                });
+        }
+
+        // Auto-test on page load
+        setTimeout(testConnection, 1000);
+    </script>
+</body>
+</html>
